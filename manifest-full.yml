@@ -1,0 +1,12 @@
+---
+applications:
+- name: todos-mysql
+  memory: 1G
+  routes:
+  - route: todos-mysql.apps.retro.io
+  path: target/todos-mysql-1.0.0.SNAP.jar
+  buildpack: java_buildpack_offline
+  env:
+    TODOS_MYSQL_LIMIT: 2048
+  services:
+   - todos-database
