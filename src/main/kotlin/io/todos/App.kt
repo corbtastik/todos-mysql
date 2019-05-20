@@ -1,4 +1,4 @@
-package io.corbs.todos
+package io.todos
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +12,6 @@ import org.springframework.util.ObjectUtils
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import javax.persistence.*
-
 
 @Entity
 @Table(name="todos")
@@ -35,11 +34,11 @@ interface TodosRepo : CrudRepository<TodoEntity, Int> { }
 
 @SpringBootApplication
 @RestController
-class TodosDataApplication(
-    @Autowired val repo: TodosRepo,
-    @Value("\${todos.mysql.limit}") val limit: Int) {
+class App(
+        @Autowired val repo: TodosRepo,
+        @Value("\${todos.mysql.limit}") val limit: Int) {
 
-    companion object { val LOG = LoggerFactory.getLogger(TodosDataApplication::class.java.name) }
+    companion object { val LOG = LoggerFactory.getLogger(App::class.java.name) }
 
     @PostMapping("/")
     fun create(@RequestBody todo: Todo): TodoEntity {
@@ -92,7 +91,7 @@ class TodosDataApplication(
     }
 
     @GetMapping("/limit")
-    fun getL(): Limit {
+    fun limit(): Limit {
         return Limit(this.repo.count().toInt(), this.limit)
     }
 
@@ -116,7 +115,7 @@ class TodosDataApplication(
 }
 
 fun main(args: Array<String>) {
-    runApplication<TodosDataApplication>(*args)
+    runApplication<App>(*args)
 }
 
 

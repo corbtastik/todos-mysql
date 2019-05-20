@@ -9,7 +9,6 @@ spring:
 management:
   endpoints:
     web:
-      base-path: /ops
       exposure:
         include: '*'
 todos:
