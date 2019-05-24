@@ -3,6 +3,6 @@ applications:
 - name: todos-mysql
   memory: 1G
   path: target/todos-mysql-1.0.0.SNAP.jar
-  buildpack: java_buildpack
+  buildpack: java_buildpack_offline
   services:
    - todos-database

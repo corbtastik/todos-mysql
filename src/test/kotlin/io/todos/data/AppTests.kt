@@ -1,4 +1,4 @@
-package io.todos
+package io.todos.data
 
 import org.junit.Test
 import org.junit.runner.RunWith
