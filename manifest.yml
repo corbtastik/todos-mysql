@@ -5,4 +5,9 @@ applications:
   path: target/todos-mysql-1.0.0.SNAP.jar
   buildpack: java_buildpack_offline
   services:
-   - todos-database
+  - todos-database
+  - todos-config
+  - todos-registry
+  env:
+    TRUST_CERTS: api.sys.retro.io
+    TODOS_API_LIMIT: 1024

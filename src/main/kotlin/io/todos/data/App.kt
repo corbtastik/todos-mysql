@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient
+import org.springframework.cloud.context.config.annotation.RefreshScope
 import org.springframework.data.repository.CrudRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Repository
@@ -43,6 +45,8 @@ interface TodosRepo : CrudRepository<TodoEntity, Long> { }
 
 @SpringBootApplication
 @RestController
+@RefreshScope
+@EnableDiscoveryClient
 class App(
         @Autowired val repo: TodosRepo,
         @Value("\${todos.mysql.limit}") val limit: Int) {
