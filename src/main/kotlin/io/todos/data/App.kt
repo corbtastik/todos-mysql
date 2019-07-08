@@ -25,14 +25,14 @@ import java.util.UUID
 @EnableDiscoveryClient
 class App(
     @Autowired @Qualifier("todosRepo") val repo: TodosRepo,
-    @Value("\${todos.mysql.limit}") val limit: Int) {
+    @Value("\${todos.api.limit}") val limit: Int) {
 
     @PostMapping("/")
     fun create(@RequestBody todo: Todo): Todo {
         val count = this.repo.count()
         if(count >= limit) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST,
-                "todos.mysql.limit=$limit, todos.size=$count")
+                "todos.api.limit=$limit, todos.size=$count")
         }
         val createObject = Todo()
         createObject.id = UUID.randomUUID().toString()

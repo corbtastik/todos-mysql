@@ -12,5 +12,5 @@ management:
       exposure:
         include: '*'
 todos:
-  mysql:
+  api:
     limit: 1024
