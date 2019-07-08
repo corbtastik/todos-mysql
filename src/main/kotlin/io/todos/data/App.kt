@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient
-import org.springframework.cloud.context.config.annotation.RefreshScope
 import org.springframework.http.HttpStatus
 import org.springframework.util.ObjectUtils
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -21,8 +19,6 @@ import java.util.UUID
 
 @SpringBootApplication
 @RestController
-@RefreshScope
-@EnableDiscoveryClient
 class App(
     @Autowired @Qualifier("todosRepo") val repo: TodosRepo,
     @Value("\${todos.mysql.limit}") val limit: Int) {
