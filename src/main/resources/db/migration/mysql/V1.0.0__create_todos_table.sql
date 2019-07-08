@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS `todos`;
 CREATE TABLE `todos` (
-  `id`        BIGINT AUTO_INCREMENT,
+  `id`        VARCHAR(64) NOT NULL,
   `title`     VARCHAR(255) DEFAULT NULL,
-  `completed` BIT DEFAULT FALSE,
+  `complete`  BIT DEFAULT FALSE,
   PRIMARY KEY (`id`),
   INDEX (`title`)
 );

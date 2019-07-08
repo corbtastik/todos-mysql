@@ -1,14 +1,13 @@
 package io.todos.data
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 import org.springframework.cloud.context.config.annotation.RefreshScope
-import org.springframework.data.repository.CrudRepository
 import org.springframework.http.HttpStatus
-import org.springframework.stereotype.Repository
 import org.springframework.util.ObjectUtils
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,63 +17,41 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.Table
-
-@Entity
-@Table(name="todos")
-data class TodoEntity(var title: String, var completed: Boolean) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
-    constructor() : this("",false)
-}
-
-data class Limit(val size: Int, val limit: Int)
-
-class Todo {
-    var title: String? = null
-    var completed: Boolean? = null
-}
-
-@Repository("todos")
-interface TodosRepo : CrudRepository<TodoEntity, Long> { }
+import java.util.UUID
 
 @SpringBootApplication
 @RestController
 @RefreshScope
 @EnableDiscoveryClient
 class App(
-        @Autowired val repo: TodosRepo,
-        @Value("\${todos.mysql.limit}") val limit: Int) {
+    @Autowired @Qualifier("todosRepo") val repo: TodosRepo,
+    @Value("\${todos.mysql.limit}") val limit: Int) {
 
     @PostMapping("/")
-    fun create(@RequestBody todo: Todo): TodoEntity {
+    fun create(@RequestBody todo: Todo): Todo {
         val count = this.repo.count()
         if(count >= limit) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST,
                 "todos.mysql.limit=$limit, todos.size=$count")
         }
-        val createObject = TodoEntity()
+        val createObject = Todo()
+        createObject.id = UUID.randomUUID().toString()
         if(!ObjectUtils.isEmpty(todo.title)) {
-            createObject.title = todo.title!!
+            createObject.title = todo.title
         }
-        if(!ObjectUtils.isEmpty(todo.completed)) {
-            createObject.completed = todo.completed!!
+        if(!ObjectUtils.isEmpty(todo.complete)) {
+            createObject.complete = todo.complete
         }
         return this.repo.save(createObject)
     }
 
     @GetMapping("/")
-    fun retrieve(): List<TodoEntity> {
+    fun retrieve(): List<Todo> {
         return this.repo.findAll().iterator().asSequence().toList()
     }
 
     @GetMapping("/{id}")
-    fun retrieve(@PathVariable id: Long): TodoEntity {
+    fun retrieve(@PathVariable id: String): Todo {
         if (!repo.existsById(id)) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "todo.id=$id")
         }
@@ -82,22 +59,22 @@ class App(
     }
 
     @PatchMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody todo: Todo): TodoEntity {
+    fun update(@PathVariable id: String, @RequestBody todo: Todo): Todo {
         if (!repo.existsById(id)) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "todo.id=$id")
         }
         val updateObject = repo.findById(id).get()
         if(!ObjectUtils.isEmpty(todo.title)) {
-            updateObject.title = todo.title!!
+            updateObject.title = todo.title
         }
-        if(!ObjectUtils.isEmpty(todo.completed)) {
-            updateObject.completed = todo.completed!!
+        if(!ObjectUtils.isEmpty(todo.complete)) {
+            updateObject.complete = todo.complete
         }
         return this.repo.save(updateObject)
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: Long) {
+    fun delete(@PathVariable id: String) {
         repo.deleteById(id)
     }
 
@@ -108,19 +85,23 @@ class App(
 
     @PostMapping("/load")
     fun load(@RequestBody options: Map<String,Any>) {
-        val size: Int = options.get("size") as Int
+        val size: Int = options["size"] as Int
         for(i in 1..size) {
-            this.repo.save(TodoEntity("Todo num ${i}", false))
+            val todo = Todo()
+            todo.id = UUID.randomUUID().toString()
+            todo.title = "Todo number $i"
+            todo.complete = false
+            this.repo.save(todo)
         }
     }
 
-    @PostMapping("/drop")
+    @DeleteMapping("/drop")
     fun drop() {
         this.repo.deleteAll()
     }
 
     @GetMapping("/dump")
-    fun dump(): List<TodoEntity> {
+    fun dump(): List<Todo> {
         return this.repo.findAll().iterator().asSequence().toList()
     }
 }
