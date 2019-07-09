@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
@@ -27,6 +28,7 @@ class App(
     @Autowired @Qualifier("todosRepo") val repo: TodosRepo,
     @Value("\${todos.api.limit}") val limit: Int) {
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/")
     fun create(@RequestBody todo: Todo): Todo {
         val count = this.repo.count()
