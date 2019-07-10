@@ -23,18 +23,22 @@ import java.util.UUID
 @RestController
 class App(
     @Autowired @Qualifier("todosRepo") val repo: TodosRepo,
-    @Value("\${todos.mysql.limit}") val limit: Int) {
+    @Value("\${todos.api.limit}") val limit: Int) {
 
-    @ResponseStatus(CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/")
     fun create(@RequestBody todo: Todo): Todo {
         val count = this.repo.count()
         if(count >= limit) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST,
-                "todos.mysql.limit=$limit, todos.size=$count")
+                    "todos.api.limit=$limit, todos.size=$count")
         }
         val createObject = Todo()
-        createObject.id = UUID.randomUUID().toString()
+        if(ObjectUtils.isEmpty(todo.id)) {
+            createObject.id = UUID.randomUUID().toString()
+        } else {
+            createObject.id = todo.id
+        }
         if(!ObjectUtils.isEmpty(todo.title)) {
             createObject.title = todo.title
         }
