@@ -37,7 +37,11 @@ class App(
                 "todos.api.limit=$limit, todos.size=$count")
         }
         val createObject = Todo()
-        createObject.id = UUID.randomUUID().toString()
+        if(ObjectUtils.isEmpty(todo.id)) {
+            createObject.id = UUID.randomUUID().toString()
+        } else {
+            createObject.id = todo.id
+        }
         if(!ObjectUtils.isEmpty(todo.title)) {
             createObject.title = todo.title
         }
