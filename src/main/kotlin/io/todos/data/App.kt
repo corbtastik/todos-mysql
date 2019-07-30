@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
-
 @SpringBootApplication
 @RestController
 class App(
     @Autowired @Qualifier("todosRepo") val repo: TodosRepo,
-    @Value("\${todos.api.limit}") val limit: Int) {
+    @Value("\${todos.api.limit}") val limit: Int,
+    @Value("\${todos.ids.tinyId}") val tinyId: Boolean) {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/")
@@ -35,7 +35,14 @@ class App(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "todos.api.limit=$limit, todos.size=$count")
         }
+
         val createObject = Todo()
+        if (tinyId) {
+            todo.id = UUID.randomUUID().toString().substring(0, 8)
+        } else {
+            todo.id = UUID.randomUUID().toString()
+        }
+
         if(ObjectUtils.isEmpty(todo.id)) {
             createObject.id = UUID.randomUUID().toString()
         } else {
