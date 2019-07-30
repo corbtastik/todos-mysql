@@ -11,3 +11,4 @@ applications:
   env:
     TRUST_CERTS: api.sys.retro.io
     TODOS_API_LIMIT: 4096
+    SPRING_APPLICATION_NAME: todos-mysql
