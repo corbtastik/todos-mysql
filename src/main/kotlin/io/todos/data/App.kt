@@ -26,7 +26,8 @@ import java.util.UUID
 @EnableDiscoveryClient
 class App(
     @Autowired @Qualifier("todosRepo") val repo: TodosRepo,
-    @Value("\${todos.api.limit}") val limit: Int) {
+    @Value("\${todos.api.limit}") val limit: Int,
+    @Value("\${todos.ids.tinyId}") val tinyId: Boolean) {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/")
@@ -34,9 +35,16 @@ class App(
         val count = this.repo.count()
         if(count >= limit) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST,
-                "todos.api.limit=$limit, todos.size=$count")
+                    "todos.api.limit=$limit, todos.size=$count")
         }
+
         val createObject = Todo()
+        if (tinyId) {
+            todo.id = UUID.randomUUID().toString().substring(0, 8)
+        } else {
+            todo.id = UUID.randomUUID().toString()
+        }
+
         if(ObjectUtils.isEmpty(todo.id)) {
             createObject.id = UUID.randomUUID().toString()
         } else {
