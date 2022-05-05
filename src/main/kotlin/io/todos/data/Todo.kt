@@ -11,11 +11,4 @@ class Todo {
     var id: String? = null
     var title: String? = null
     var complete: Boolean = false
-    fun complete() {
-        this.complete = true
-    }
-
-    fun incomplete() {
-        this.complete = false
-    }
 }
