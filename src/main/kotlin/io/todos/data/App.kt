@@ -14,6 +14,7 @@ import java.util.*
 
 @SpringBootApplication
 @RestController
+@RequestMapping("todos")
 class App(
     @Autowired @Qualifier("todosRepo") val repo: TodosRepo,
     @Value("\${todos.api.limit}") val limit: Int,
