@@ -4,6 +4,8 @@ Todo(s) data api using Spring Boot.
 
 * [Spring Boot](https://start.spring.io)
 * [Podman](https://github.com/containers/podman)
+* [cURL](https://curl.se/)
+* [HTTPie](https://httpie.io/)
 
 > I'm not a fan of the maven wrapper (aka mvnw) so you'll need maven.
 > [SDK Man](https://sdkman.io/) is your friend.
@@ -142,3 +144,8 @@ podman exec -it todos-db /bin/bash \
 podman exec -it todos-db /bin/bash \
   -c 'mysql -uuser1 -pmysql123 -e "SELECT * FROM todos.todos;"'
 ```
+
+## Next Steps
+
+The [Todos-MySQL](https://github.com/corbtastik/todos-mysql) app can be used as a backend for [Todos-WebUI]
+(https://github.com/corbtastik/todos-webui). Next steps could be running the two together so Todo(s) are saved.
