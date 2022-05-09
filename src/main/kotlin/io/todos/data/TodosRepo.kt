@@ -4,4 +4,6 @@ import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.stereotype.Repository
 
 @Repository("todosRepo")
-interface TodosRepo : PagingAndSortingRepository<Todo, String>
+interface TodosRepo : PagingAndSortingRepository<Todo, String> {
+    fun findTodoByComplete(complete: Boolean): List<Todo>
+}

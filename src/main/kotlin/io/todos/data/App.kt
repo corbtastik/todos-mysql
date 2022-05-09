@@ -34,24 +34,38 @@ class App(
                 "todos.api.limit=$limit, todos.size=$count")
         }
 
-        val createObject = Todo()
-        if (tinyId) {
-            todo.id = UUID.randomUUID().toString().substring(0, 8)
+        val newTodo = Todo()
+        if(!ObjectUtils.isEmpty(todo.id)) {
+            // let user set their own id
+            newTodo.id = todo.id
         } else {
-            todo.id = UUID.randomUUID().toString()
+            if (tinyId) {
+                newTodo.id = UUID.randomUUID().toString().substring(0, 8)
+            } else {
+                newTodo.id = UUID.randomUUID().toString()
+            }
         }
 
-        createObject.id = todo.id
-        createObject.title = todo.title
+        newTodo.title = todo.title
         if(!ObjectUtils.isEmpty(todo.complete)) {
-            createObject.complete = todo.complete
+            newTodo.complete = todo.complete
         }
-        return this.repo.save(createObject)
+        return this.repo.save(newTodo)
     }
 
     @GetMapping("/")
     fun retrieve(): List<Todo> {
         return this.repo.findAll().iterator().asSequence().toList()
+    }
+
+    @GetMapping("/complete")
+    fun retrieveComplete() : List<Todo> {
+        return this.repo.findTodoByComplete(true)
+    }
+
+    @GetMapping("/incomplete")
+    fun retrieveIncomplete() : List<Todo> {
+        return this.repo.findTodoByComplete(false)
     }
 
     @GetMapping("/paged")

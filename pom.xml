@@ -105,6 +105,31 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>nl.lexemmens</groupId>
+				<artifactId>podman-maven-plugin</artifactId>
+				<version>1.8.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<skipAuth>true</skipAuth>
+					<images>
+						<image>
+							<name>todos-mysql</name>
+							<build>
+								<pull>true</pull>
+								<createLatestTag>true</createLatestTag>
+								<format>OCI</format>
+							</build>
+						</image>
+					</images>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
