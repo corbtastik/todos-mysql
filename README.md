@@ -40,6 +40,8 @@ java -jar ./target/todos-mysql-1.0.0.SNAP.jar \
   --MYSQL_DATABASE=todos
 ```
 
+### Or
+
 ## Run via Podman
 
 ```bash
