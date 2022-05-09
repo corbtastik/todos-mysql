@@ -2,6 +2,12 @@
 
 Todo(s) data api using Spring Boot.
 
+* [Spring Boot](https://start.spring.io)
+* [Podman](https://github.com/containers/podman)
+
+> I'm not a fan of the maven wrapper (aka mvnw) so you'll need maven.
+> [SDK Man](https://sdkman.io/) is your friend.
+
 ## Build
 
 ```bash
